@@ -6,7 +6,7 @@ function ProcesamientoDeVoz({ setVoiceMessage }) {
 
   useEffect(() => {
     if (!listening && transcript.trim()) {
-      console.log("🎙️ Mensaje de voz detectado:", transcript);
+      console.log(" Mensaje de voz detectado:", transcript);
       setVoiceMessage(transcript);
       resetTranscript();
     }

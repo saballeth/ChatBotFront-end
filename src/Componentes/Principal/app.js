@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Chat from "./ruta/Chat";
-import ProcesamientoDeVoz from "./ruta/Procesamiento_de_voz";
+import Chat from "./chat";
+import ProcesamientoDeVoz from "./Procesamiento_de_voz";
 
 const App = () => {
   const [voiceMessage, setVoiceMessage] = useState("");

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Principal.css";
 import Procesamiento_de_voz from "./Procesamiento_de_voz";
-import { fetchChatResponse } from "./ai_api"; // ✅ Importa la función corregida
+import { fetchPlantUMLCode } from "./deepseek_service";
 
 function ComponentePrincipal() {
   const [voiceMessage, setVoiceMessage] = useState(""); 
@@ -12,8 +12,10 @@ function ComponentePrincipal() {
 
     console.log("🎙️ Mensaje de voz recibido:", voiceMessage);
 
-    // 🔹 Llamamos a la API para obtener el código UML
-    fetchChatResponse(voiceMessage).then(setPlantUMLCode);
+    fetchPlantUMLCode(voiceMessage).then((umlCode) => {
+      console.log("📄 Código PlantUML generado:", umlCode);
+      setPlantUMLCode(umlCode);
+    });
 
   }, [voiceMessage]); 
 
