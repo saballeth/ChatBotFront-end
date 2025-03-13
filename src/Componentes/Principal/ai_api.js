@@ -1,5 +1,5 @@
-const API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B";
-const API_TOKEN = "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"; 
+const API_URL = process.env.REACT_APP_API_URL;
+const API_TOKEN = process.env.REACT_APP_API_TOKEN;
 
 export const fetchChatResponse = async (message) => {
     console.log("Enviando petición a Hugging Face...");
