@@ -1,2 +1,2 @@
 # modulo_voice2
-Diseño FrontEnd de pagina web para creacion de diagramas UML y casos de uso, accesible para personas con discapacidad visual, con implementación con Inteligencia artificial 
+Diseño Front-End de una página web accesible para la creación de diagramas UML y casos de uso, orientada a personas con discapacidad visual, con integración de herramientas de Inteligencia Artificial. 
