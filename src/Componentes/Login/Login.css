@@ -1,0 +1,81 @@
+body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .container {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 24rem;
+      width: 100%;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      color: #4B5563; /* text-gray-700 */
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    p {
+      color: #9CA3AF; /* text-gray-400 */
+      font-size: 0.75rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .buttons {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .button {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      border: 1px solid transparent;
+      width: 6.5rem;
+      box-sizing: border-box;
+    }
+    .button img {
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 0.5rem;
+    }
+    .button span {
+      color: #6B7280; /* text-gray-500 */
+      font-size: 0.75rem;
+      text-align: center;
+    }
+    .button-primary {
+      box-shadow: 0 0 15px 0 rgba(0, 82, 255, 0.3);
+      border-color: transparent;
+    }
+    .button-secondary {
+      border-color: #D1D5DB; /* border-gray-300 */
+    }
+    @media (max-width: 640px) {
+      .buttons {
+        gap: 1rem;
+      }
+      .button {
+        width: 5.5rem;
+        padding: 0.75rem;
+      }
+      .button img {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+    }

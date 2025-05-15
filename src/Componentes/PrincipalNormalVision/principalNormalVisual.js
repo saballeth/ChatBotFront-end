@@ -8,7 +8,7 @@ function PrincpipalNormalVisual() {
 
   return (
     <div className={contrast ? "bg-white text-black" : "bg-white text-black"}>
-      {/* Top bar */}
+      {/* Barra */}
       <header className="bg-indigo-600 h-14 flex items-center justify-end px-6 space-x-6">
         <button aria-label="Notifications" className="text-white text-lg">
           <i className="fas fa-bell"></i>
@@ -19,7 +19,7 @@ function PrincpipalNormalVisual() {
       </header>
 
       <main className="flex flex-col md:flex-row max-w-[1200px] mx-auto mt-6 px-4 md:px-6 gap-6">
-        {/* Left panel */}
+        {/* Panel izquierdo */}
         <section className="flex flex-col w-full max-w-[320px] border border-indigo-100 rounded-xl p-4">
           <h2 className="text-sm mb-3">Sistema UML</h2>
           <form className="flex items-center mb-4 space-x-2" onSubmit={(e) => e.preventDefault()}>
@@ -81,7 +81,7 @@ function PrincpipalNormalVisual() {
           </div>
         </section>
 
-        {/* Right panel */}
+        {/* Panel derecho */}
         <section className="flex flex-col flex-grow border border-indigo-100 rounded-xl">
           <header className="flex items-center justify-between border-b border-indigo-100 p-4 rounded-t-xl">
             <div>

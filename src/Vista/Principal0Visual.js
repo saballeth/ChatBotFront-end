@@ -1,5 +1,5 @@
 import React from 'react';
-import BajaVisionPrincipal from '../Componentes/Principal/Principal0Visual/Principal0Visual';
+import BajaVisionPrincipal from '../Componentes/Principal0Visual/Principal0Visual';
 
 const Principal0Visual = () => {
   return (
