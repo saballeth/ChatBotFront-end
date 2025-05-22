@@ -13,6 +13,54 @@
   position: relative;
 }
 
+.chatbot-header {
+  background: #003366;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  max-width: 80%;
+}
+
+.chat-message.bot {
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 8px;
+  align-self: flex-start;
+}
+
+.chat-message.user {
+  background: #d1e7dd;
+  border-radius: 8px;
+  padding: 8px;
+  align-self: flex-end;
+}
+
+.chatbot-footer {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px;
+  font-size: 1rem;
+}
+
+
 /* Modal para centrar el chat */
 .chatbot-modal {
   position: fixed;
