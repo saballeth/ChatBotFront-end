@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
-import "./Chat.css";
-import logo from "./Logo.png";
-import Chatbot from "./Chat";
+import "./Principal.css";
+import "../Chat/Chat.css";
+import Chatbot from "../../Vistas/chat";
+import Logo from "../../../assets/imagenes/Logo.png";
 
-const App = () => {
+const Principal = () => {
   const [highContrast, setHighContrast] = useState(() => {
     return localStorage.getItem("highContrast") === "true";
   });
@@ -37,9 +37,9 @@ const App = () => {
     <>
       <header className="custom-header">
         <div className="left-section">{/* Placeholder opcional */}</div>
-
+          <img src={Logo} alt="Logo central" className="center-logo" />
         <div className="center-section">
-          <img src={logo} alt="Logo central" className="center-logo" />
+         
           <div className="logo-text">GIDSYC</div>
         </div>
 
@@ -79,4 +79,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Principal;

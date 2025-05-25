@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import App from '../principal/App';
+import Principal from '../Vistas/principal';
 
 
 const Routers = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Principal />} />
         
       </Routes>
     </BrowserRouter>
