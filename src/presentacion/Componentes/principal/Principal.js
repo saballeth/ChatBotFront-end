@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Principal.css";
-import "../Chat/Chat.css";
-import Chatbot from "../../Vistas/chat";
+import "../ChatBot/Chat.css";
 import Logo from "../../../assets/imagenes/Logo.png";
 
 const Principal = () => {
@@ -12,8 +11,6 @@ const Principal = () => {
   const [fontScale, setFontScale] = useState(() => {
     return parseFloat(localStorage.getItem("fontScale")) || 1;
   });
-
-  const [showChatbot, setShowChatbot] = useState(false);
 
   useEffect(() => {
     document.body.classList.toggle("high-contrast", highContrast);
@@ -35,18 +32,16 @@ const Principal = () => {
 
   return (
     <>
-      <header className="custom-header">
-        <div className="left-section">{/* Placeholder opcional */}</div>
-          <img src={Logo} alt="Logo central" className="center-logo" />
+            <header className="custom-header">
+        <div className="left-section"></div>
+        <button className="plus-minus-btn" onClick={() => {}}aria-label="Aumentar">+</button>
+        <button className="plus-minus-btn" onClick={() => {}}aria-label="Disminuir">-</button>
         <div className="center-section">
-         
-          <div className="logo-text">GIDSYC</div>
+          <img src={Logo} alt="Logo central" className="center-logo" />
+          <div className="logo-text">Modelo UML basado en voz</div>
         </div>
-
         <div className="right-section">
-          <button className="text-resize-button" onClick={handleFontResize}>
-            A+
-          </button>
+          <button className="text-resize-button" onClick={handleFontResize}>A+</button>
           <label className="switch">
             <input
               type="checkbox"
@@ -60,19 +55,7 @@ const Principal = () => {
       </header>
 
       <main>
-        {!showChatbot && (
-          <button
-            className="access-chatbot-button"
-            onClick={() => setShowChatbot(true)}
-          >
-            Abrir Chatbot
-          </button>
-        )}
-        {showChatbot && (
-          <div className="chatbot-modal">
-            <Chatbot onClose={() => setShowChatbot(false)} />
-          </div>
-        )}
+        
 
       </main>
     </>

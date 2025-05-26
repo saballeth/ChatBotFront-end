@@ -1,10 +1,13 @@
 import Principal from '../Componentes/principal/Principal';
-import React from 'react';
+import Chatbot from '../Vistas/ChatBot';
+import "../../index.css";
+
 
 function principal() {
     return (
-        <div>
+        <div className="main-layout-vertical">
         <Principal />
+        <Chatbot />
         </div>
     );
 };

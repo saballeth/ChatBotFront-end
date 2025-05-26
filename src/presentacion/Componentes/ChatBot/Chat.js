@@ -7,9 +7,10 @@ const Chatbot = ({ onClose }) => {
   ]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [inputEnable, setInputEnabled] = useState(true);
 
   const handleSend = async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || !inputEnable) return;
 
     const newUserMessage = { from: "user", text: inputText };
     setMessages((prev) => [...prev, newUserMessage]);
@@ -49,13 +50,13 @@ const Chatbot = ({ onClose }) => {
     if (e.key === "Enter") handleSend();
   };
 
+  const toggleInput = () => {
+    setInputEnabled((prev) => !prev);
+  }
+
   return (
     <div className="chatbot-window">
-      <div className="chatbot-header">
-        <h3>Asistente Virtual</h3>
-        <button className="chatbot-close" onClick={onClose}>✕</button>
-      </div>
-
+    
       <div className="chatbot-messages">
         {messages.map((msg, index) => (
           <div key={index} className={`chat-message ${msg.from}`}>
@@ -66,6 +67,9 @@ const Chatbot = ({ onClose }) => {
       </div>
 
       <div className="chatbot-footer">
+        <button className="toggle-input" onClick={toggleInput}>
+          {inputEnable ? "Desactivar Entrada" : "Activar Entrada"}
+        </button>
         <input
           type="text"
           className="chat-input"
