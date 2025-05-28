@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Principal.css";
-import "../ChatBot/Chat.css";
 import Logo from "../../../assets/imagenes/Logo.png";
+import Chatbot from "../Chatbot/Chatbot";
+
+
 
 const Principal = () => {
   const [highContrast, setHighContrast] = useState(() => {
@@ -9,8 +11,12 @@ const Principal = () => {
   });
 
   const [fontScale, setFontScale] = useState(() => {
-    return parseFloat(localStorage.getItem("fontScale")) || 1;
+    const savedScale = parseFloat(localStorage.getItem("fontScale"));
+    return !isNaN(savedScale) ? savedScale : 1;
   });
+
+  // Convertir fontScale a fontSize en píxeles (base: 16px)
+  const fontSize = 16 * fontScale;
 
   useEffect(() => {
     document.body.classList.toggle("high-contrast", highContrast);
@@ -26,22 +32,29 @@ const Principal = () => {
     setHighContrast((prev) => !prev);
   };
 
-  const handleFontResize = () => {
-    setFontScale((prev) => (prev < 1.5 ? prev + 0.1 : 1));
+  const handleFontIncrease = () => {
+    setFontScale((prev) => (prev < 1.5 ? prev + 0.1 : prev));
+  };
+
+  const handleFontDecrease = () => {
+    setFontScale((prev) => (prev > 0.8 ? prev - 0.1 : prev));
   };
 
   return (
-    <>
-            <header className="custom-header">
+    <div className={`principal ${highContrast ? "high-contrast" : ""}`}>
+      <header className="custom-header">
         <div className="left-section"></div>
-        <button className="plus-minus-btn" onClick={() => {}}aria-label="Aumentar">+</button>
-        <button className="plus-minus-btn" onClick={() => {}}aria-label="Disminuir">-</button>
         <div className="center-section">
           <img src={Logo} alt="Logo central" className="center-logo" />
           <div className="logo-text">Modelo UML basado en voz</div>
         </div>
         <div className="right-section">
-          <button className="text-resize-button" onClick={handleFontResize}>A+</button>
+          <button className="text-resize-button decrease" onClick={handleFontDecrease}>
+            A-
+          </button>
+          <button className="text-resize-button increase" onClick={handleFontIncrease}>
+            A+
+          </button>
           <label className="switch">
             <input
               type="checkbox"
@@ -53,12 +66,9 @@ const Principal = () => {
           </label>
         </div>
       </header>
-
       <main>
-        
-
-      </main>
-    </>
+        <Chatbot fontSize={fontSize} isHighContrast={highContrast} />       </main>
+    </div>
   );
 };
 
