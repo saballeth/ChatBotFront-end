@@ -152,32 +152,36 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                     <p className="new-chat-text">Nuevo Chat</p>
                   </div>
                   {chats.map((chat) => (
-                    <div
-                      key={chat.id}
-                      className={`chat-item ${chat.id === currentChatId ? "selected" : ""}`}
-                      onClick={() => selectChat(chat.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24px"
-                        height="24px"
-                        fill="currentColor"
-                        viewBox="0 0 256 256"
-                        className="chat-icon"
-                      >
-                        <path
-                          d={
-                            chat.id === currentChatId
-                              ? "M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24ZM84,140a12,12,0,1,1,12-12A12,12,0,0,1,84,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,140Z"
-                              : "M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
-                          }
-                        ></path>
-                      </svg>
-                      <p className="chat-title">{chat.title}</p>
-                      <span className="chat-status">{chat.status}</span>
-                      {chat.time && <span className="chat-time">{chat.time}</span>}
-                    </div>
-                  ))}
+  <div
+    key={chat.id}
+    className={`chat-item ${chat.id === currentChatId ? "selected" : ""}`}
+    onClick={() => selectChat(chat.id)}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24px"
+      height="24px"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      className="chat-icon"
+    >
+      <path
+        d={
+          chat.id === currentChatId
+            ? "M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24ZM84,140a12,12,0,1,1,12-12A12,12,0,0,1,84,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,140Z"
+            : "M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
+        }
+      ></path>
+    </svg>
+
+    <div style={{ fontSize: `${fontSize}px`, letterSpacing: '0.2em' }}>
+      <p className="chat-title">{chat.title}</p>
+      <span className="chat-status">{chat.status}</span>
+      {chat.time && <span className="chat-time">{chat.time}</span>}
+    </div>
+  </div>
+))}
+
                 </div>
               </div>
             </div>
@@ -229,7 +233,7 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                       )}
                       <div className={`message-content ${msg.from}`}>
                         <p className="message-sender">{msg.from === "user" ? "Tú" : "Alex"}</p>
-                        <p className="message-text">{msg.text}</p>
+                        <p className="message-text" style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}>{msg.text}</p>
                       </div>
                       {msg.from === "user" && (
                         <div
@@ -266,6 +270,7 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                         onChange={(e) => setInputText(e.target.value)}
                         onKeyPress={handleKeyPress}
                         disabled={loading || !inputEnable}
+                        style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
                       />
                       <div className="input-buttons">
                         <button className="toggle-input-btn" onClick={toggleInput}>
@@ -289,6 +294,7 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                           className="send-btn"
                           onClick={handleSend}
                           disabled={loading || !inputEnable}
+                          style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
                         >
                           <span className="truncate">Enviar</span>
                         </button>

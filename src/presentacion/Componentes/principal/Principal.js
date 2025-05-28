@@ -67,7 +67,7 @@ const Principal = () => {
         </div>
       </header>
       <main>
-        <Chatbot fontSize={fontSize} isHighContrast={highContrast} />       </main>
+        <Chatbot fontSize={fontSize} isHighContrast={highContrast} fontScale={fontScale} />       </main>
     </div>
   );
 };
