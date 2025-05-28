@@ -98,8 +98,6 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
     setInputEnabled((prev) => !prev);
   };
 
-  
-
   const toggleMinimize = () => {
     setIsMinimized((prev) => !prev);
     setIsMaximized(false);
@@ -130,84 +128,179 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
 
   return (
     <div
-      className={`chatbot-container ${isHighContrast ? "high-contrast" : ""} ${isMaximized ? "maximized" : ""} ${
-        isMinimized ? "minimized" : ""
-      }`}
+      className={`chatbot-container ${isHighContrast ? "high-contrast" : ""} ${isMaximized ? "maximized" : ""} ${isMinimized ? "minimized" : ""}`}
       style={{ fontSize: `${fontSize}px` }}
     >
-      <div className="chatbot-header">
-        <span>Chatbot</span>
-        <div className="header-buttons">
-          <button onClick={toggleSidebar} className="sidebar-toggle-btn">
-            {isSidebarVisible ? "◄" : "►"}
-          </button>
-          <button onClick={toggleMinimize} className="minimize-btn">
-            {isMinimized ? "🡙" : "🡛"}
-          </button>
-          
-          <button onClick={() => window.close()} className="close-btn">✖</button>
-        </div>
-      </div>
-
-      {!isMinimized && (
-        <div className="chatbot-content">
-          {isSidebarVisible && (
-            <div className="item-list">
-              <div className="chat-controls">
-                <button className="chat-button" onClick={addNewChat}>
-                  Añadir Chat
-                </button>
-              </div>
-              {chats.map((chat) => (
-                <div
-                  className={`item ${chat.id === currentChatId ? "selected" : ""}`}
-                  key={chat.id}
-                  onClick={() => selectChat(chat.id)}
-                >
-                  <div className="item-title">
-                    {chat.title}
-                    <span className="status">{chat.status}</span>
+      <div className="layout-container">
+        <div className="layout-content">
+          {isSidebarVisible && !isMinimized && (
+            <div className={`sidebar ${isHighContrast ? "high-contrast" : ""}`}>
+              <div className="sidebar-content">
+                <h1 className="sidebar-title">Chats</h1>
+                <div className="chat-list">
+                  <div className="new-chat-item" onClick={addNewChat}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24px"
+                      height="24px"
+                      fill="currentColor"
+                      viewBox="0 0 256 256"
+                      className="new-chat-icon"
+                    >
+                      <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path>
+                    </svg>
+                    <p className="new-chat-text">Nuevo Chat</p>
                   </div>
-                  {chat.time && <div className="time">{chat.time}</div>}
-                  <button className="play-button">▶</button>
+                  {chats.map((chat) => (
+                    <div
+                      key={chat.id}
+                      className={`chat-item ${chat.id === currentChatId ? "selected" : ""}`}
+                      onClick={() => selectChat(chat.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24px"
+                        height="24px"
+                        fill="currentColor"
+                        viewBox="0 0 256 256"
+                        className="chat-icon"
+                      >
+                        <path
+                          d={
+                            chat.id === currentChatId
+                              ? "M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24ZM84,140a12,12,0,1,1,12-12A12,12,0,0,1,84,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,140Z"
+                              : "M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
+                          }
+                        ></path>
+                      </svg>
+                      <p className="chat-title">{chat.title}</p>
+                      <span className="chat-status">{chat.status}</span>
+                      {chat.time && <span className="chat-time">{chat.time}</span>}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           )}
-
-          <div className="chatbot-window">
-            <div className="chatbot-messages">
-              {currentChat?.messages.map((msg, index) => (
-                <div key={index} className={`chat-message ${msg.from}`}>
-                  <p>{msg.text}</p>
-                </div>
-              ))}
-              {loading && (
-                <div className="chat-message bot">
-                  <p>Escribiendo...</p>
-                </div>
-              )}
-            </div>
-            <div className="chatbot-footer">
-              <button className="toggle-input-btn" onClick={toggleInput}>
-                {inputEnable ? "🔒" : "🔓"}
+          <div className="chat-area">
+            <div className="chat-header">
+              <button onClick={toggleSidebar} className="sidebar-toggle-btn">
+                {isSidebarVisible ? "◄" : "►"}
               </button>
-              <input
-                type="text"
-                className="chat-input"
-                placeholder="Escribe tu mensaje..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={handleKeyPress}
-                disabled={loading || !inputEnable}
-              />
-              <button onClick={handleSend} disabled={loading || !inputEnable}>
-                Enviar
-              </button>
+              <p className="chat-header-title">Chat con Alex</p>
+              <div className="header-buttons">
+                <button onClick={toggleMinimize} className="minimize-btn">
+                  {isMinimized ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20px"
+                      height="20px"
+                      fill="currentColor"
+                      viewBox="0 0 256 256"
+                    >
+                      <path d="M208,136H48a8,8,0,0,1,0-16H208a8,8,0,0,1,0,16Z"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20px"
+                      height="20px"
+                      fill="currentColor"
+                      viewBox="0 0 256 256"
+                    >
+                      <path d="M208,136H136v72a8,8,0,0,1-16,0V136H48a8,8,0,0,1,0-16h72V48a8,8,0,0,1,16,0v72h72a8,8,0,0,1,0,16Z"></path>
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
+            {!isMinimized && (
+              <>
+                <div className="chat-messages">
+                  {currentChat?.messages.map((msg, index) => (
+                    <div key={index} className={`message ${msg.from}`}>
+                      {msg.from === "bot" && (
+                        <div
+                          className="avatar"
+                          style={{
+                            backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtLeaWcm3Gq5WXfCug9GLCB3ChksC5wskGbfqeQ36EuED-IuQuTAzOmDWZjp4cKlIqBWNPGXPV8W9daFTgx0gK2FmDOxY0gQZ-K5ZK08X0dmN7zLwVMfnnPyMENPt4A5jDqu1WtYTcnxyqnD0UtZd5rJ4nhml39_3cxeBgAyI43gIBQmWJkk0feSJinNLWH5lpp2Z1BVRGH7Zsj_VCtmZNLTfp-j5WQnZlk72VqD4EHTLkRFaQr5QLGL9QpR-h9TbQalZGfDhAY6yl")`,
+                          }}
+                        ></div>
+                      )}
+                      <div className={`message-content ${msg.from}`}>
+                        <p className="message-sender">{msg.from === "user" ? "Tú" : "Alex"}</p>
+                        <p className="message-text">{msg.text}</p>
+                      </div>
+                      {msg.from === "user" && (
+                        <div
+                          className="avatar"
+                          style={{
+                            backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDSe2vZbyRe20H6pY4fuXIOMMt9LV5llzfn6sKzf5DL3g9YNjfL9lWbkvn6r89BlMhSBzvRZFBoc-jDBCj39wh3m7y3lQUNsAaKqgrX_rmrmjDr2ps__cyUVcY7U2rHY_HPVqLXNpFFhTf1YRXJ60b-z7UoKQjxZe9s8WChzlAqz4EXeQ5xFnODwO5xgGPoSGHm6EUvTPKZGsCjZPoafZ3uc-fV8Vka6rGzVsGaLaRBOYl2RxEKxfN6fNLIKsmj0aAF-ejkuB-HzIVj")`,
+                          }}
+                        ></div>
+                      )}
+                    </div>
+                  ))}
+                  {loading && (
+                    <div className="message bot">
+                      <div
+                        className="avatar"
+                        style={{
+                          backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtLeaWcm3Gq5WXfCug9GLCB3ChksC5wskGbfqeQ36EuED-IuQuTAzOmDWZjp4cKlIqBWNPGXPV8W9daFTgx0gK2FmDOxY0gQZ-K5ZK08X0dmN7zLwVMfnnPyMENPt4A5jDqu1WtYTcnxyqnD0UtZd5rJ4nhml39_3cxeBgAyI43gIBQmWJkk0feSJinNLWH5lpp2Z1BVRGH7Zsj_VCtmZNLTfp-j5WQnZlk72VqD4EHTLkRFaQr5QLGL9QpR-h9TbQalZGfDhAY6yl")`,
+                        }}
+                      ></div>
+                      <div className="message-content bot">
+                        <p className="message-sender">Alex</p>
+                        <p className="message-text">Escribiendo...</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="chat-footer">
+                  <label className="input-container">
+                    <div className="input-wrapper">
+                      <input
+                        placeholder="Escribe un mensaje"
+                        className="chat-input"
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        disabled={loading || !inputEnable}
+                      />
+                      <div className="input-buttons">
+                        <button className="toggle-input-btn" onClick={toggleInput}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20px"
+                            height="20px"
+                            fill="currentColor"
+                            viewBox="0 0 256 256"
+                          >
+                            <path
+                              d={
+                                inputEnable
+                                  ? "M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"
+                                  : "M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z M128,160a24,24,0,0,0-24,24,8,8,0,0,1-16,0,40,40,0,0,1,80,0,8,8,0,0,1-16,0A24,24,0,0,0,128,160Z"
+                              }
+                            ></path>
+                          </svg>
+                        </button>
+                        <button
+                          className="send-btn"
+                          onClick={handleSend}
+                          disabled={loading || !inputEnable}
+                        >
+                          <span className="truncate">Enviar</span>
+                        </button>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
