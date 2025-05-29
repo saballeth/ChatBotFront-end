@@ -15,9 +15,7 @@ const Principal = () => {
     return !isNaN(savedScale) ? savedScale : 1;
   });
 
-  const [input, setInput] = useState(false); // o false según lo que desees por defecto
-
-  // Convertir fontScale a fontSize en píxeles (base: 16px)
+  const [input, setInput] = useState(false); 
   const fontSize = 16 * fontScale;
 
   useEffect(() => {
@@ -50,8 +48,8 @@ const Principal = () => {
               <input
               type="checkbox"
               id="contrast-toggle"
-              checked={input} // Se refleja el estado actual
-              onChange={() => setInput(prev => !prev)} // Cambia el valor al hacer clic
+              checked={input} 
+              onChange={() => setInput(prev => !prev)} 
               />
               <span className="slider"></span>
             </label>

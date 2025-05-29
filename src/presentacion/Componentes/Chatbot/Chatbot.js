@@ -147,19 +147,6 @@ const Chatbot = ({ fontSize, isHighContrast, inputEnabled, input }) => {
 
   const lastSpokenIndex = useRef(-1);
 
-/*useEffect(() => {
-  if (currentChat && currentChat.messages.length > 0) {
-    const lastIndex = currentChat.messages.length - 1;
-    const lastMsg = currentChat.messages[lastIndex];
-
-    if (lastMsg.from === "bot" && lastIndex !== lastSpokenIndex.current) {
-      speak(lastMsg.text);
-      lastSpokenIndex.current = lastIndex;
-    }
-  }
-}, [currentChat?.messages]);
-*/
-
   return (
     <div
       aria-label="Area de chat con Alex"

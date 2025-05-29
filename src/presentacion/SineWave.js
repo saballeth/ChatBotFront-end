@@ -11,14 +11,14 @@ const SineWave = () => {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    // Asigna el tamaño del canvas al del contenedor
+    
     const resizeCanvas = () => {
       canvas.width = container.offsetWidth;
       canvas.height = container.offsetHeight;
     };
 
-    resizeCanvas(); // Llama al inicio
-    window.addEventListener("resize", resizeCanvas); // Y cuando cambie el tamaño
+    resizeCanvas(); 
+    window.addEventListener("resize", resizeCanvas); 
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -61,7 +61,7 @@ const SineWave = () => {
   return (
     <div
       ref={containerRef}
-      style={{ width: "100%", height: "100px" }} // Puedes ajustar este alto como desees
+      style={{ width: "100%", height: "100px" }} 
     >
       <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
     </div>
