@@ -15,6 +15,8 @@ const Principal = () => {
     return !isNaN(savedScale) ? savedScale : 1;
   });
 
+  const [input, setInput] = useState(false); // o false según lo que desees por defecto
+
   // Convertir fontScale a fontSize en píxeles (base: 16px)
   const fontSize = 16 * fontScale;
 
@@ -43,7 +45,17 @@ const Principal = () => {
   return (
     <div className={`principal ${highContrast ? "high-contrast" : ""}`}>
       <header className="custom-header">
-        <div className="left-section"></div>
+        <div className="left-section">
+            <label className="switch">
+              <input
+              type="checkbox"
+              id="contrast-toggle"
+              checked={input} // Se refleja el estado actual
+              onChange={() => setInput(prev => !prev)} // Cambia el valor al hacer clic
+              />
+              <span className="slider"></span>
+            </label>
+        </div>
         <div className="center-section">
           <img src={Logo} alt="Logo central" className="center-logo" />
           <div className="logo-text">Modelo UML basado en voz</div>
@@ -67,7 +79,7 @@ const Principal = () => {
         </div>
       </header>
       <main>
-        <Chatbot fontSize={fontSize} isHighContrast={highContrast} fontScale={fontScale} />       </main>
+        <Chatbot fontSize={fontSize} isHighContrast={highContrast} fontScale={fontScale} input = {input} />       </main>
     </div>
   );
 };

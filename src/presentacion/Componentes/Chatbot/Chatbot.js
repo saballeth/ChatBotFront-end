@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Chatbot.css";
+import Sinewave from "../../SineWave";
 
-const Chatbot = ({ fontSize, isHighContrast }) => {
+const Chatbot = ({ fontSize, isHighContrast, inputEnabled, input }) => {
+  
   const [chats, setChats] = useState(() => {
     const savedChats = localStorage.getItem("chats");
     return savedChats
@@ -66,6 +68,9 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
 
       const data = await response.json();
       const reply = data.choices?.[0]?.message?.content || "Sin respuesta.";
+      
+      speak(reply);
+      
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === currentChatId
@@ -94,10 +99,6 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
     if (e.key === "Enter") handleSend();
   };
 
-  const toggleInput = () => {
-    setInputEnabled((prev) => !prev);
-  };
-
   const toggleMinimize = () => {
     setIsMinimized((prev) => !prev);
     setIsMaximized(false);
@@ -105,6 +106,15 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
 
   const toggleSidebar = () => {
     setIsSidebarVisible((prev) => !prev);
+  };
+
+  const speak = (text) => {
+    // Detener cualquier lectura previa
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES"; // Cambia el idioma si quieres
+    window.speechSynthesis.speak(utterance);
   };
 
   const addNewChat = () => {
@@ -121,13 +131,38 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
   };
 
   const selectChat = (chatId) => {
-    setCurrentChatId(chatId);
-  };
+  const selected = chats.find((chat) => chat.id === chatId);
+  setCurrentChatId(chatId);
+
+  // Hablar primero el título, luego el último mensaje del bot si existe
+  speak(`Abriendo ${selected?.title}`, () => {
+    const lastBotMsg = selected?.messages?.slice().reverse().find(m => m.from === 'bot');
+    if (lastBotMsg) {
+      speak(lastBotMsg.text);
+    }
+  });
+};
 
   const currentChat = chats.find((chat) => chat.id === currentChatId) || chats[0];
 
+  const lastSpokenIndex = useRef(-1);
+
+/*useEffect(() => {
+  if (currentChat && currentChat.messages.length > 0) {
+    const lastIndex = currentChat.messages.length - 1;
+    const lastMsg = currentChat.messages[lastIndex];
+
+    if (lastMsg.from === "bot" && lastIndex !== lastSpokenIndex.current) {
+      speak(lastMsg.text);
+      lastSpokenIndex.current = lastIndex;
+    }
+  }
+}, [currentChat?.messages]);
+*/
+
   return (
     <div
+      aria-label="Area de chat con Alex"
       className={`chatbot-container ${isHighContrast ? "high-contrast" : ""} ${isMaximized ? "maximized" : ""} ${isMinimized ? "minimized" : ""}`}
       style={{ fontSize: `${fontSize}px` }}
     >
@@ -151,36 +186,36 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                     </svg>
                     <p className="new-chat-text">Nuevo Chat</p>
                   </div>
-                  {chats.map((chat) => (
-  <div
-    key={chat.id}
-    className={`chat-item ${chat.id === currentChatId ? "selected" : ""}`}
-    onClick={() => selectChat(chat.id)}
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24px"
-      height="24px"
-      fill="currentColor"
-      viewBox="0 0 256 256"
-      className="chat-icon"
-    >
-      <path
-        d={
-          chat.id === currentChatId
-            ? "M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24ZM84,140a12,12,0,1,1,12-12A12,12,0,0,1,84,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,140Z"
-            : "M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
-        }
-      ></path>
-    </svg>
+    {chats.map((chat) => (
+      <div
+        key={chat.id}
+        className={`chat-item ${chat.id === currentChatId ? "selected" : ""}`}
+        onClick={() => selectChat(chat.id)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24px"
+          height="24px"
+          fill="currentColor"
+          viewBox="0 0 256 256"
+          className="chat-icon"
+        >
+          <path
+            d={
+              chat.id === currentChatId
+                ? "M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24ZM84,140a12,12,0,1,1,12-12A12,12,0,0,1,84,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,140Z"
+                : "M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
+            }
+          ></path>
+        </svg>
 
-    <div style={{ fontSize: `${fontSize}px`, letterSpacing: '0.2em' }}>
-      <p className="chat-title">{chat.title}</p>
-      <span className="chat-status">{chat.status}</span>
-      {chat.time && <span className="chat-time">{chat.time}</span>}
-    </div>
-  </div>
-))}
+        <div style={{ fontSize: `${fontSize}px`, letterSpacing: '0.2em' }}>
+          <p className="chat-title">{chat.title}</p>
+          <span className="chat-status">{chat.status}</span>
+          {chat.time && <span className="chat-time">{chat.time}</span>}
+        </div>
+      </div>
+    ))}
 
                 </div>
               </div>
@@ -188,7 +223,12 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
           )}
           <div className="chat-area">
             <div className="chat-header">
-              <button onClick={toggleSidebar} className="sidebar-toggle-btn">
+              <button
+              onClick={(e) => {
+                toggleSidebar(); // <-- tu función real
+                speak("Botón para crear una nueva conversación");
+              }}
+                className="sidebar-toggle-btn">
                 {isSidebarVisible ? "◄" : "►"}
               </button>
               <p className="chat-header-title">Chat con Alex</p>
@@ -231,6 +271,7 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                           }}
                         ></div>
                       )}
+                      
                       <div className={`message-content ${msg.from}`}>
                         <p className="message-sender">{msg.from === "user" ? "Tú" : "Alex"}</p>
                         <p className="message-text" style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}>{msg.text}</p>
@@ -260,48 +301,33 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
                     </div>
                   )}
                 </div>
-                <div className="chat-footer">
-                  <label className="input-container">
-                    <div className="input-wrapper">
-                      <input
-                        placeholder="Escribe un mensaje"
-                        className="chat-input"
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        disabled={loading || !inputEnable}
-                        style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
-                      />
-                      <div className="input-buttons">
-                        <button className="toggle-input-btn" onClick={toggleInput}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20px"
-                            height="20px"
-                            fill="currentColor"
-                            viewBox="0 0 256 256"
-                          >
-                            <path
-                              d={
-                                inputEnable
-                                  ? "M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"
-                                  : "M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z M128,160a24,24,0,0,0-24,24,8,8,0,0,1-16,0,40,40,0,0,1,80,0,8,8,0,0,1-16,0A24,24,0,0,0,128,160Z"
-                              }
-                            ></path>
-                          </svg>
-                        </button>
-                        <button
-                          className="send-btn"
-                          onClick={handleSend}
-                          disabled={loading || !inputEnable}
-                          style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
-                        >
-                          <span className="truncate">Enviar</span>
-                        </button>
-                      </div>
-                    </div>
-                  </label>
-                </div>
+                <div aria-label="Area de identificacion de voz" className="chat-footer">
+  {input ? (
+    <label className="input-container">
+      <div className="input-wrapper">
+        <input
+          placeholder="Escribe un mensaje"
+          className="chat-input"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyPress={handleKeyPress}
+          style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
+        />
+        <div className="input-buttons">
+          <button
+            className="send-btn"
+            onClick={handleSend}
+            style={{ fontSize: `${fontSize}px`, letterSpacing: '0.1em' }}
+          >
+            <span className="truncate">Enviar</span>
+          </button>
+        </div>
+      </div>
+    </label>
+  ) : (
+    <Sinewave />
+  )}
+</div>
               </>
             )}
           </div>
