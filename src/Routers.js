@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Principal from '../Componentes/principal/Principal.js';
+import Chatbot from './Chatbot/Chatbot/Chatbot';
 
 const Routers = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Principal />} />
-        
+        <Route path="/" element={<Chatbot />} />
       </Routes>
     </BrowserRouter>
   );
