@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-
 import "./Chatbot.css";
 
 const Chatbot = ({ fontSize, isHighContrast }) => {
@@ -14,8 +13,6 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-
-
   // --- Estados para fases de navegación y voz ---
   const [navigationPhase, setNavigationPhase] = useState('introduction');
   const [voiceActivationCount, setVoiceActivationCount] = useState(0);
@@ -26,6 +23,19 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
   const inputRef = useRef(null);
   const sendBtnRef = useRef(null);
   const [conversationMode, setConversationMode] = useState(true); // o false si quieres iniciar desactivado
+  
+  const validatePrompt = (prompt) => {
+  if (!prompt || prompt.trim() === "") {
+    return false; // El prompt está vacío o solo tiene espacios
+  }
+
+  // Puedes agregar más reglas si lo deseas
+  if (prompt.length < 5) {
+    return false; // Muy corto
+  }
+
+  return true;
+};
 
 
   // --- Speech Recognition ---
@@ -200,6 +210,21 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
   const handleSend = async (messageText = inputText) => {
   if (!messageText.trim()) return;
   
+  const isValid = validatePrompt(messageText.trim());
+
+  if (!isValid) {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        from: "bot",
+        text: "⚠️ El mensaje es demasiado corto. Debe tener al menos 5 caracteres.",
+      },
+    ]);
+    speak("El mensaje es demasiado corto.");
+    return;
+    }
+
+
   const newUserMessage = { from: "user", text: messageText };
   setMessages(prev => [...prev, newUserMessage]);
   setInputText(""); // Limpiar campo de texto
@@ -211,6 +236,36 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
     setLoading(false);
     speak(botResponse);
   }, 1500);
+
+  try {
+    // Llamada al backend para obtener retroalimentación del LLM
+    const response = await fetch("http://localhost:8000/api/llm-feedback", {
+
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: messageText }),
+    });
+
+    const data = await response.json();
+    const botResponse = data.feedback || "No se pudo generar una retroalimentación.";
+
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { from: "bot", text: botResponse },
+    ]);
+    speak(botResponse);
+
+  } catch (error) {
+    console.error("Error al obtener retroalimentación:", error);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { from: "bot", text: "❌ Error al procesar tu mensaje. Intenta más tarde." },
+    ]);
+    speak("Hubo un error al procesar tu mensaje.");
+  } finally {
+    setLoading(false);
+  }
+
 };
 
 
