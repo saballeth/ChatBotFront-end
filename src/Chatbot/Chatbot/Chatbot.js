@@ -209,64 +209,73 @@ const Chatbot = ({ fontSize, isHighContrast }) => {
   // Función para enviar mensaje
   const handleSend = async (messageText = inputText) => {
   if (!messageText.trim()) return;
-  
+
   const isValid = validatePrompt(messageText.trim());
-
   if (!isValid) {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        from: "bot",
-        text: "⚠️ El mensaje es demasiado corto. Debe tener al menos 5 caracteres.",
-      },
-    ]);
-    speak("El mensaje es demasiado corto.");
+    const errorMsg = "⚠️ El mensaje es demasiado corto. Debe tener al menos 5 caracteres.";
+    setMessages(prev => [...prev, { from: "bot", text: errorMsg }]);
+    speak(errorMsg);
     return;
-    }
-
+  }
 
   const newUserMessage = { from: "user", text: messageText };
   setMessages(prev => [...prev, newUserMessage]);
-  setInputText(""); // Limpiar campo de texto
+  setInputText("");
   setLoading(true);
 
-  setTimeout(() => {
-    const botResponse = "He recibido tu mensaje de voz. Estoy procesando tu solicitud.";
-    setMessages(prev => [...prev, { from: "bot", text: botResponse }]);
-    setLoading(false);
-    speak(botResponse);
-  }, 1500);
-
   try {
-    // Llamada al backend para obtener retroalimentación del LLM
     const response = await fetch("http://localhost:8000/api/llm-feedback", {
-
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: messageText }),
     });
 
-    const data = await response.json();
-    const botResponse = data.feedback || "No se pudo generar una retroalimentación.";
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { from: "bot", text: botResponse },
-    ]);
-    speak(botResponse);
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let text = "";
+
+    // Inicializamos un mensaje vacío del bot para ir actualizándolo
+    setMessages(prev => [...prev, { from: "bot", text: "" }]);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      text += decoder.decode(value, { stream: true });
+
+      // Actualizar el último mensaje (bot) con el texto acumulado
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { from: "bot", text };
+        return updated;
+      });
+    }
+
+    if (!text.trim()) {
+      throw new Error("Respuesta vacía del servidor");
+    }
+
+    // Leer todo el texto final con voz (opcional)
+    speak(text);
 
   } catch (error) {
-    console.error("Error al obtener retroalimentación:", error);
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { from: "bot", text: "❌ Error al procesar tu mensaje. Intenta más tarde." },
-    ]);
-    speak("Hubo un error al procesar tu mensaje.");
+    console.error("Error:", error);
+    const errorMsg = error.message.includes("demasiado corto")
+      ? error.message
+      : "❌ Error al procesar tu mensaje. Intenta más tarde.";
+
+    setMessages(prev => [...prev, { from: "bot", text: errorMsg }]);
+    speak(errorMsg);
+
   } finally {
     setLoading(false);
   }
-
 };
+
 
 
   useEffect(() => {
@@ -352,7 +361,6 @@ useEffect(() => {
             {loading && (
               <div className="message bot">
                 <div className="message-content bot">
-                  <span className="message-text">procesando...</span>
                 </div>
               </div>
             )}
